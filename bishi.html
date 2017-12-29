@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		
+			<input type="text" id="n"/><br>
+			<button  onclick="fn()" >生成数组</button>			
+			<p id="result"></p><br><br>
+			<input type="text" id="shu"/><br>
+			<button  onclick="conver1()" >转换成中文读法</button>			
+			<p id="chinese_re"></p>
+		
+	</body>
+	<script type="text/javascript">
+		function conver1(){
+			
+			var num1=document.getElementById('shu').value;
+			var num=parseInt(num1);
+			var resu=document.getElementById('chinese_re')
+			if (typeof num!=='number'||num>=100000000){return -1};			
+			var wanji=parseInt(num/10000);
+			var geji=parseInt(num%10000);
+			
+			var wanji_str=conver_four(wanji);
+			var geji_str=conver_four(geji)
+			console.log(wanji_str)
+			var result='';
+			if(wanji_str===''){
+				result=geji_str;
+			}else if(geji<1000){
+				result=wanji_str+'万零'+geji_str;
+			}
+			else{
+				result=wanji_str+'万'+geji_str;
+			}
+			
+			resu.innerText=result;
+			console.log(result);
+			return result;
+		}
+		function conver_four(temp){
+			console.log(temp)
+			var chinese=['零','壹','贰','叁','肆','伍','陆','柒','捌','玖'];
+			//var chinese_str=['千','佰','拾','']
+			var qian=parseInt(temp/1000);
+			var bai=parseInt(temp%1000/100);
+			var shi=parseInt(temp%100/10);
+			var ge=temp%10;
+			var result_four='';
+			var stack=[];
+			result_four=chinese[qian]+'仟'+chinese[bai]+'佰'+chinese[shi]+'拾'+chinese[ge];
+			while(result_four.length>0){
+				if(result_four.charAt(0)==='零'&&stack.length===0){
+					result_four=result_four.substring(1);
+				}else if(stack.length!==0&&stack[stack.length-1]==='零'&&result_four.charAt(0)==='零'){
+					result_four=result_four.substring(1);
+				}else if(stack[stack.length-1]==='零'&&((result_four.charAt(0)==='仟')||(result_four.charAt(0)==='佰')||(result_four.charAt(0)==='拾'))){
+					result_four=result_four.substring(1);
+				}else if(stack.length===0&&((result_four.charAt(0)==='仟')||(result_four.charAt(0)==='佰')||(result_four.charAt(0)==='拾'))){
+					result_four=result_four.substring(1);
+				}
+				else{
+					stack.push(result_four.charAt(0));
+					result_four=result_four.substring(1);
+				}
+			}
+			while(stack[stack.length-1]==='零'){stack.pop();}
+			result_four=stack.join('');
+			console.log(result_four)
+			return result_four;
+			
+		}
+        function fn() {
+	       var n=document.getElementById('n').value;
+	       var m=parseInt(n)
+	       var res=document.getElementById('result');
+	       var random;
+	       var result=[];
+	       if(typeof m !=='number'||n>31||n<1){
+	       	console.log("输入的数字不正确")
+	       	return -1;
+	       }
+	       while(result.length<m){
+	       	random=2+Math.round(Math.random()*30);
+	       	if(result.indexOf(random)===-1){
+	       		result.push(random);
+	       	}
+	       }
+	       console.log('原来数字'+result);
+	       var sort=result.sort()
+	       res.innerText=sort;
+	       console.log('排序数组'+sort);
+		}
+        function MaxSum(arr){
+        	var len=arr.length;
+        	if(arr==null||len===0){return -1}
+        	var curSum=0;
+        	var maxSum=0;
+        	var start_index=0;
+        	var end_index=0;
+        	for(var i=0;i<len;i++){
+        		curSum+=arr[i];
+        		if(curSum<0){
+        			curSum=0;
+        			start_index=i+1;
+        		}
+        		if(curSum>maxSum){
+        			maxSum=curSum;
+        			end_index=i
+        		}
+        	}
+        	if(maxSum<0){
+        		maxSum=arr[0]
+        		for(var j=1;j<len;j++){
+        			if(maxSum<arr[j]){
+        				maxSum=arr[j];
+        				start_index=end_index=j;
+        			}
+        		}
+        	}
+        	var result_arr=[];
+        	for(var k=start_index;k<=end_index;k++){
+        		result_arr[k-start_index]=arr[k];
+        		console.log(arr[k]);
+        	}
+        	return result_arr;
+        	
+        }
+        function jiaoji(arr1,arr2){
+        	var arr3=[];
+        	for(var i=0;i<arr1.length;i++){
+        		for(var j=0;j<arr2.length;j++){
+        			if(arr1[i]===arr2[j]){
+        				arr3.push(arr1[i])
+        			}
+        		}
+        	}
+        	return arr3
+        	
+        }
+        function jiaoji1(arr1,arr2){
+        	var arr3=[];
+        	for(var i=0;i<arr1.length;i++){
+        		while(1){
+	        		var start=0;var end=arr2.length-1;
+	        		temp=Math.floor((start+end)/2);
+	        		if(arr1[i]===arr2[temp]){arr3.push(arr1[i]);break;}
+	        		else if(end<start)return false;
+	        		else{
+	        			if(arr1[i]>arr2[temp])start=temp+1;
+	        			else{end=temp-1;}
+	        		}	
+        		}       		
+        	}
+        	return arr3
+        }
+	</script>
+</html>
